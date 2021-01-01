@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/fragment_settings_import"
-        android:name="com.fonguard.ui.settings.ImportSettingsFragment"
-        android:label="@string/fragment_label_settings_import"
-        tools:layout="@layout/fragment_settings_import" />
+        android:name="com.fonguard.ui.settings.SettingsFragment"
+        android:label="@string/fragment_label_settings_importExport"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

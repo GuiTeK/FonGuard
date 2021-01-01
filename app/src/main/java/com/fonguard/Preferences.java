@@ -141,6 +141,10 @@ public final class Preferences {
     }
 
 
+    public Settings getSettings() {
+        return mSettings;
+    }
+
     public void setSettings(Settings settings) {
         mSettings = settings;
         saveSettings();

@@ -44,6 +44,7 @@ import android.view.Menu;
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_APP_NEEDED_DANGEROUS_PERMISSIONS = 1;
     public static final int REQUEST_CODE_SETTINGS_IMPORT_FILE_DIALOG = 2;
+    public static final int REQUEST_CODE_SETTINGS_EXPORT_FILE_DIALOG = 3;
 
     public static final String INTENT_ACTION_MOTION_TRIGGER_SET_PREVIEW_SURFACE =
             "com.fonguard.intent.guardservice.triggers.motiontrigger.SET_PREVIEW_SURFACE";

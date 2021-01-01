@@ -41,8 +41,8 @@
         <menu>
             <item
                 android:id="@+id/fragment_settings_import"
-                android:icon="@drawable/ic_drawer_item_settings_import"
-                android:title="@string/drawer_item_settings_import" />
+                android:icon="@drawable/ic_drawer_item_settings_import_export"
+                android:title="@string/drawer_item_settings_importExport" />
         </menu>
     </item>
 </menu>

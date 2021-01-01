@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -41,14 +42,16 @@ import com.google.gson.stream.MalformedJsonException;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
+import static com.fonguard.MainActivity.REQUEST_CODE_SETTINGS_EXPORT_FILE_DIALOG;
 import static com.fonguard.MainActivity.REQUEST_CODE_SETTINGS_IMPORT_FILE_DIALOG;
 
-public class ImportSettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_settings_import, container,
+        View root = inflater.inflate(R.layout.fragment_settings, container,
                 false);
-        Button importButton = root.findViewById(R.id.fragment_settings_import_import_button);
+        Button importButton = root.findViewById(R.id.fragment_settings_import_button);
+        Button exportButton = root.findViewById(R.id.fragment_settings_export_button);
 
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +62,19 @@ public class ImportSettingsFragment extends Fragment {
                 startActivityForResult(Intent.createChooser(intent,
                         getString(R.string.fragment_settings_import_dialog_title)),
                         REQUEST_CODE_SETTINGS_IMPORT_FILE_DIALOG);
+            }
+        });
+
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent()
+                        .setType("application/json")
+                        .setAction(Intent.ACTION_CREATE_DOCUMENT)
+                        .addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(Intent.createChooser(intent,
+                        getString(R.string.fragment_settings_export_dialog_title)),
+                        REQUEST_CODE_SETTINGS_EXPORT_FILE_DIALOG);
             }
         });
 
@@ -74,6 +90,8 @@ public class ImportSettingsFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 importSettings(data.getData());
             }
+        } else if (requestCode == REQUEST_CODE_SETTINGS_EXPORT_FILE_DIALOG) {
+            exportSettings(data.getData());
         }
     }
 
@@ -88,6 +106,9 @@ public class ImportSettingsFragment extends Fragment {
             //  IDs are unique, etc.) so there are no exceptions later on when using the settings.
 
             Preferences.getInstance(getContext()).setSettings(settings);
+
+            Toast.makeText(getContext(), R.string.fragment_settings_import_success_toast_text,
+                    Toast.LENGTH_LONG).show();
         }
 
         catch (MalformedJsonException | JsonSyntaxException ex) {
@@ -107,6 +128,28 @@ public class ImportSettingsFragment extends Fragment {
                     .setTitle(R.string.fragment_settings_import_error_title)
                     .setMessage(R.string.fragment_settings_import_error_message_unknown)
                     .setPositiveButton(R.string.fragment_settings_import_error_positive_button_text,
+                            null)
+                    .create()
+                    .show();
+
+            ex.printStackTrace();
+        }
+    }
+
+    private void exportSettings(Uri settingsUri) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Settings settings = Preferences.getInstance(getContext()).getSettings();
+        String settingsJson = gson.toJson(settings);
+
+        try {
+            File.writeAllText(settingsUri, getContext().getContentResolver(), settingsJson);
+            Toast.makeText(getContext(), R.string.fragment_settings_export_success_toast_text,
+                    Toast.LENGTH_LONG).show();
+        } catch (IOException ex) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.fragment_settings_export_error_title)
+                    .setMessage(R.string.fragment_settings_export_error_message_unknown)
+                    .setPositiveButton(R.string.fragment_settings_export_error_positive_button_text,
                             null)
                     .create()
                     .show();

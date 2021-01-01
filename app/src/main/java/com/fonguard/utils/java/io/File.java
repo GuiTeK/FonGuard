@@ -22,6 +22,7 @@ import android.net.Uri;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class File {
@@ -34,5 +35,13 @@ public class File {
         fileInputStream.close();
 
         return new String(buffer, StandardCharsets.UTF_8);
+    }
+
+    public static void writeAllText(Uri uri, ContentResolver contentResolver, String text)
+            throws IOException {
+        OutputStream fileOutputStream = contentResolver.openOutputStream(uri);
+
+        fileOutputStream.write(text.getBytes());
+        fileOutputStream.close();
     }
 }

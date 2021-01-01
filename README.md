@@ -119,7 +119,7 @@ still in development.
     - [x] Enable/disable payload attachment
 * Settings
     - [x] Import
-    - [ ] Export
+    - [x] Export
 
 ## Contributing
 Any help is very appreciated and most welcome!
