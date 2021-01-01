@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/drawer_group_triggers">
+        <menu>
+            <item
+                android:id="@+id/fragment_triggers_motion"
+                android:icon="@drawable/ic_drawer_item_triggers_motion"
+                android:title="@string/drawer_item_triggers_motion" />
+            <item
+                android:id="@+id/fragment_triggers_noise"
+                android:icon="@drawable/ic_drawer_item_triggers_noise"
+                android:title="@string/drawer_item_triggers_noise" />
+            <item
+                android:id="@+id/fragment_triggers_vibration"
+                android:icon="@drawable/ic_drawer_item_triggers_vibration"
+                android:title="@string/drawer_item_triggers_vibration" />
+            <item
+                android:id="@+id/fragment_triggers_other"
+                android:icon="@drawable/ic_drawer_item_triggers_other"
+                android:title="@string/drawer_item_triggers_other" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_group_actions_rules">
+        <menu>
+            <item
+                android:id="@+id/fragment_actions"
+                android:icon="@drawable/ic_drawer_item_actions"
+                android:title="@string/drawer_item_actions" />
+            <item
+                android:id="@+id/fragment_rules"
+                android:icon="@drawable/ic_drawer_item_rules"
+                android:title="@string/drawer_item_rules" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_group_settings">
+        <menu>
+            <item
+                android:id="@+id/fragment_settings_import"
+                android:icon="@drawable/ic_drawer_item_settings_import"
+                android:title="@string/drawer_item_settings_import" />
+        </menu>
+    </item>
+</menu>

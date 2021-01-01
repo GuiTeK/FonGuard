@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/fragment_home">
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.fonguard.ui.home.HomeFragment"
+        android:label="@string/fragment_label_home"
+        tools:layout="@layout/fragment_home" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_triggers_motion"
+        android:name="com.fonguard.ui.triggers.motion.TriggersMotionFragment"
+        android:label="@string/fragment_label_triggers_motion"
+        tools:layout="@layout/fragment_triggers_motion" />
+    <fragment
+        android:id="@+id/fragment_triggers_noise"
+        android:name="com.fonguard.ui.triggers.noise.TriggersNoiseFragment"
+        android:label="@string/fragment_label_triggers_noise"
+        tools:layout="@layout/fragment_triggers_noise" />
+    <fragment
+        android:id="@+id/fragment_triggers_vibration"
+        android:name="com.fonguard.ui.triggers.vibration.TriggersVibrationFragment"
+        android:label="@string/fragment_label_triggers_vibration"
+        tools:layout="@layout/fragment_triggers_vibration" />
+    <fragment
+        android:id="@+id/fragment_triggers_other"
+        android:name="com.fonguard.ui.triggers.other.TriggersOtherFragment"
+        android:label="@string/fragment_label_triggers_other"
+        tools:layout="@layout/fragment_triggers_other" />
+
+    <fragment
+        android:id="@+id/fragment_actions"
+        android:name="com.fonguard.ui.actions.ActionsFragment"
+        android:label="@string/fragment_label_actions"
+        tools:layout="@layout/fragment_actions" />
+
+    <fragment
+        android:id="@+id/fragment_rules"
+        android:name="com.fonguard.ui.rules.RulesFragment"
+        android:label="@string/fragment_label_rules"
+        tools:layout="@layout/fragment_rules" />
+
+    <fragment
+        android:id="@+id/fragment_settings_import"
+        android:name="com.fonguard.ui.settings.ImportSettingsFragment"
+        android:label="@string/fragment_label_settings_import"
+        tools:layout="@layout/fragment_settings_import" />
+</navigation>

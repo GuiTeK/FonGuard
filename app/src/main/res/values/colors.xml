@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#33425B</color>
+    <color name="colorPrimaryDark">#19212D</color>
+    <color name="colorAccent">#F33535</color>
+    <color name="default_triggers_motion_image_preview_color">#000000</color>
+</resources>
