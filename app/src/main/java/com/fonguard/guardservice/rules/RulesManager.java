@@ -17,6 +17,8 @@
  */
 package com.fonguard.guardservice.rules;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.fonguard.Preferences;
@@ -24,9 +26,12 @@ import com.fonguard.guardservice.actions.Action;
 import com.fonguard.guardservice.actions.AwsS3Action;
 import com.fonguard.guardservice.actions.HttpAction;
 import com.fonguard.guardservice.actions.IAction;
+import com.fonguard.guardservice.actions.PhoneMmsAction;
 import com.fonguard.guardservice.settings.rules.Rule;
 import com.fonguard.guardservice.triggers.Trigger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class RulesManager {
     private static final String LOG_TAG = RulesManager.class.getName();
 
-    private static RulesManager instance;
+    private static RulesManager sInstance;
 
     private final ScheduledExecutorService mExecutorService;
     private final Preferences mPreferences;
@@ -45,16 +50,17 @@ public class RulesManager {
 
 
     public static RulesManager getInstance(Preferences preferences) {
-        if (instance == null) {
+        if (sInstance == null) {
             synchronized (RulesManager.class) {
-                if (instance == null) {
-                    instance = new RulesManager(preferences);
+                if (sInstance == null) {
+                    sInstance = new RulesManager(preferences);
                 }
             }
         }
 
-        return instance;
+        return sInstance;
     }
+
 
     private RulesManager(Preferences preferences) {
         mExecutorService =
@@ -64,7 +70,7 @@ public class RulesManager {
     }
 
 
-    public void performActionsAsync(Trigger source, byte[] payload) {
+    public void performActionsAsync(Trigger source, Object payload, Context context) {
         Map<Rule, IAction> actionsToPerform = getActionsToPerform(source);
 
         for (Map.Entry<Rule, IAction> actionToPerform : actionsToPerform.entrySet()) {
@@ -73,7 +79,7 @@ public class RulesManager {
 
             if (isCooldownOver(rule.Id)) {
                 mRulesCooldowns.put(rule.Id, System.currentTimeMillis() + rule.CooldownMs);
-                performActionAsync(source, payload, action, rule, 1, rule.Retries);
+                performActionAsync(source, payload, context, action, rule, 1, rule.Retries);
             } else {
                 Log.v(LOG_TAG, "Cooldown for rule \"" + rule.Id + "\" is not over yet, " +
                         "skipping action");
@@ -81,20 +87,21 @@ public class RulesManager {
         }
     }
 
-    private void performActionAsync(final Trigger source, final byte[] payload,
+    private void performActionAsync(final Trigger source, final Object payload, Context context,
                                     final IAction action, final Rule rule, final int tries,
                                     final int maxRetries) {
         mExecutorService.execute(new Runnable() {
             @Override
             public void run() {
-                boolean success = action.perform(source, rule.IncludePayload, payload);
+                boolean success = action.perform(RulesManager.this, context, source,
+                        rule.IncludePayload, payload);
 
                 if (!success && tries - 1 < maxRetries) {
                     mExecutorService.schedule(new Runnable() {
                         @Override
                         public void run() {
-                            performActionAsync(source, payload, action, rule, tries + 1,
-                                    maxRetries);
+                            performActionAsync(source, payload, context, action, rule,
+                                    tries + 1, maxRetries);
                         }
                     }, rule.RetryDelayMs, TimeUnit.MILLISECONDS);
                 }
@@ -123,6 +130,9 @@ public class RulesManager {
                     break;
                 case AWS_S3:
                     action = createAwsS3Action(ruleActionId);
+                    break;
+                case PHONE_MMS:
+                    action = createPhoneMmsAction(ruleActionId);
                     break;
                 default:
                     Log.w(LOG_TAG, "Unsupported action type " + ruleActionType +
@@ -176,5 +186,42 @@ public class RulesManager {
         }
 
         return null;
+    }
+
+    private PhoneMmsAction createPhoneMmsAction(String id) {
+        List<com.fonguard.guardservice.settings.actions.PhoneMmsAction> actions =
+                mPreferences.getPhoneMmsActions();
+
+        for (com.fonguard.guardservice.settings.actions.PhoneMmsAction action : actions) {
+            if (action.Id.equals(id)) {
+                return new PhoneMmsAction(action);
+            }
+        }
+
+        return null;
+    }
+
+
+    public byte[] getBytesFromPayloadObject(Object payload) {
+        byte[] buffer = null;
+
+        if (payload instanceof Bitmap) {
+            Bitmap bitmap = (Bitmap)payload;
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            buffer = outputStream.toByteArray();
+
+            try {
+                outputStream.close();
+            } catch (IOException ex) {
+                Log.w(LOG_TAG, "Could not close Bitmap outputStream: " + ex.getMessage());
+            }
+        } else {
+            Log.w(LOG_TAG, "RulesManager.getBytesFromPayloadObject(): unsupported payload " +
+                    "object type " + payload.getClass().getName());
+        }
+
+        return buffer;
     }
 }

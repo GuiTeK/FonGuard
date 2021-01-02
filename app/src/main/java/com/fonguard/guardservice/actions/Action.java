@@ -19,5 +19,6 @@ package com.fonguard.guardservice.actions;
 
 public enum Action {
     HTTP,
-    AWS_S3
+    AWS_S3,
+    PHONE_MMS
 }

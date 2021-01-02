@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String[] APP_NEEDED_DANGEROUS_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.SEND_SMS
     };
 
     private AppBarConfiguration mAppBarConfiguration;

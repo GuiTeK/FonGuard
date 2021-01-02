@@ -28,7 +28,4 @@ public class MotionTrigger {
 
     @SerializedName("pixel_number_diff_threshold")
     public int PixelNumberDiffThreshold;
-
-    @SerializedName("jpeg_quality")
-    public int JpegQuality;
 }

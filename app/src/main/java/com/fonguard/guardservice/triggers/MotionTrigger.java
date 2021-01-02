@@ -219,20 +219,9 @@ public class MotionTrigger extends Handler implements Allocation.OnBufferAvailab
         Log.v(LOG_TAG, "Different pixels nb: " + diffPixelsNb);
 
         if (diffPixelsNb >= mPixelNumberDiffThreshold) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            byte[] buffer;
-
             Log.v(LOG_TAG, "MOTION DETECTED");
-
-            mCapturePreviewBitmap.compress(Bitmap.CompressFormat.JPEG,
-                    mPreferences.getJpegQuality(), outputStream);
-            buffer = outputStream.toByteArray();
-
-            try {
-                outputStream.close();
-            } catch (IOException ex) { }
-
-            mRulesManager.performActionsAsync(Trigger.MOTION, buffer);
+            mRulesManager.performActionsAsync(Trigger.MOTION,
+                    Bitmap.createBitmap(mCapturePreviewBitmap), mGuardService);
         }
 
         broadcastDiffPixelsNb(diffPixelsNb);

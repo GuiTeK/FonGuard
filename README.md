@@ -19,6 +19,7 @@ as described in the **rules** ([see below](#rules)).
 The following actions are currently available:
 * HTTP request
 * AWS S3 upload
+* Phone MMS
 
 ## Rules
 Rules are simply the **link** between a **trigger** (e.g. motion) and an **action** (e.g. upload the
@@ -56,7 +57,6 @@ copy/paste it and modify the values to suit your needs. **Make sure to remove al
             "camera_id": "0", // ID of the camera to use for motion detection. Can be retrieved in the list of cameras in the "Motion" tab of the app.
             "pixel_value_diff_threshold": 10, // [1;255] Minimum difference between two pixels at the same position in two consecutive images to consider them different.
             "pixel_number_diff_threshold": 10, // [1;+inf] Minimum number of different pixels between two consecutive images to consider there is a motion.
-            "jpeg_quality": 100 // [1;100] JPEG quality of the preview image sent to the actions. 1 is worst quality (very compressed), 100 is best quality.
         }
     },
     "actions": {
@@ -81,6 +81,12 @@ copy/paste it and modify the values to suit your needs. **Make sure to remove al
                 "aws_secret_access_key": "...", // AWS secret access key associated with the access key ID above.
                 "bucket_name": "fonguard", // Name of the bucket in which to upload the attachment (e.g. picture for motion trigger).
                 "key_prefix": "img" // Prefix to use for naming the files in the bucket. The full filepath will be {PREFIX}{DATETIME} where {DATETIME} is yyyy-MM-dd'T'HH:mm:ss.SSSZ.
+            }
+        ],
+        "phone_mms": [
+            {
+                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
+                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
             }
         ]
     },
@@ -110,8 +116,8 @@ still in development.
 * Actions
     - [x] HTTP (GET, POST)
     - [x] AWS S3
-    - [ ] MMS
     - [ ] SMS
+    - [x] MMS
     - [ ] Phone call
 * Rules
     - [x] Retry mechanism

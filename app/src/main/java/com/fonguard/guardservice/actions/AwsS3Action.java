@@ -17,6 +17,7 @@
  */
 package com.fonguard.guardservice.actions;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -25,6 +26,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.fonguard.guardservice.rules.RulesManager;
 import com.fonguard.guardservice.triggers.Trigger;
 
 import java.io.ByteArrayInputStream;
@@ -44,7 +46,8 @@ public class AwsS3Action implements IAction {
 
 
     @Override
-    public boolean perform(Trigger source, boolean includePayload, byte[] payload) {
+    public boolean perform(RulesManager rulesManager, Context context, Trigger source,
+                           boolean includePayload, Object payload) {
         AWSCredentials credentials = new BasicAWSCredentials(mSettings.AwsAccessKeyId,
                 mSettings.AwsSecretAccessKey);
         Region region = Region.getRegion(mSettings.AwsRegion);
@@ -53,7 +56,8 @@ public class AwsS3Action implements IAction {
                 Locale.US);
         String dateTime = dateTimeFormat.format(new Date());
         String s3Key = mSettings.KeyPrefix + dateTime + ".jpg";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(payload);
+        byte[] payloadBytes = rulesManager.getBytesFromPayloadObject(payload);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(payloadBytes);
 
         Log.i(LOG_TAG, "Performing AWS S3 action \"" + mSettings.Id + "\" (" + source +
                 " trigger, include payload [IGNORED]: " + includePayload + ")...");

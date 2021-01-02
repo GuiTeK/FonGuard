@@ -24,6 +24,7 @@ import com.fonguard.guardservice.settings.Settings;
 import com.fonguard.guardservice.settings.actions.Actions;
 import com.fonguard.guardservice.settings.actions.AwsS3Action;
 import com.fonguard.guardservice.settings.actions.HttpAction;
+import com.fonguard.guardservice.settings.actions.PhoneMmsAction;
 import com.fonguard.guardservice.settings.rules.Rule;
 import com.fonguard.guardservice.settings.triggers.MotionTrigger;
 import com.fonguard.guardservice.settings.triggers.Triggers;
@@ -37,22 +38,22 @@ public final class Preferences {
     private static final String NAME_PREFERENCES_MAIN = "FonGuard.Main";
     private static final String KEY_SETTINGS_JSON = "settingsJson";
 
-    private static Preferences instance;
+    private static Preferences sInstance;
 
     private final SharedPreferences mPref;
     private Settings mSettings;
 
 
     public static Preferences getInstance(Context context) {
-        if (instance == null) {
+        if (sInstance == null) {
             synchronized (Preferences.class) {
-                if (instance == null) {
-                    instance = new Preferences(context);
+                if (sInstance == null) {
+                    sInstance = new Preferences(context);
                 }
             }
         }
 
-        return instance;
+        return sInstance;
     }
 
     private Preferences(Context context) {
@@ -68,10 +69,10 @@ public final class Preferences {
         mSettings.Triggers.Motion.CameraId = "";
         mSettings.Triggers.Motion.PixelValueDiffThreshold = 10;
         mSettings.Triggers.Motion.PixelNumberDiffThreshold = 10;
-        mSettings.Triggers.Motion.JpegQuality = 100;
         mSettings.Actions = new Actions();
         mSettings.Actions.Http = new ArrayList<>();
         mSettings.Actions.AwsS3 = new ArrayList<>();
+        mSettings.Actions.PhoneMms = new ArrayList<>();
         mSettings.Rules = new ArrayList<>();
     }
 
@@ -108,16 +109,16 @@ public final class Preferences {
         return mSettings.Triggers.Motion.PixelNumberDiffThreshold;
     }
 
-    public int getJpegQuality() {
-        return mSettings.Triggers.Motion.JpegQuality;
-    }
-
     public List<HttpAction> getHttpActions() {
         return mSettings.Actions.Http;
     }
 
     public List<AwsS3Action> getAwsS3Actions() {
         return mSettings.Actions.AwsS3;
+    }
+
+    public List<PhoneMmsAction> getPhoneMmsActions() {
+        return mSettings.Actions.PhoneMms;
     }
 
     public List<Rule> getRules() {

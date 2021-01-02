@@ -17,8 +17,12 @@
  */
 package com.fonguard.guardservice.actions;
 
+import android.content.Context;
+
+import com.fonguard.guardservice.rules.RulesManager;
 import com.fonguard.guardservice.triggers.Trigger;
 
 public interface IAction {
-    boolean perform(Trigger source, boolean includePayload, byte[] payload);
+    boolean perform(RulesManager rulesManager, Context context, Trigger source,
+                    boolean includePayload, Object payload);
 }

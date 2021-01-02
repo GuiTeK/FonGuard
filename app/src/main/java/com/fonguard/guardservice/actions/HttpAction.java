@@ -17,8 +17,10 @@
  */
 package com.fonguard.guardservice.actions;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.fonguard.guardservice.rules.RulesManager;
 import com.fonguard.guardservice.triggers.Trigger;
 
 import java.io.IOException;
@@ -44,7 +46,8 @@ public class HttpAction implements IAction {
 
 
     @Override
-    public boolean perform(Trigger source, boolean includePayload, byte[] payload) {
+    public boolean perform(RulesManager rulesManager, Context context, Trigger source,
+                           boolean includePayload, Object payload) {
         OkHttpClient client = new OkHttpClient();
         Request.Builder requestBuilder = new Request.Builder();
         Request request;
@@ -57,7 +60,8 @@ public class HttpAction implements IAction {
             RequestBody requestBody;
 
             if (includePayload && payload != null) {
-                requestBody = RequestBody.create(payload, mediaTypeFromTrigger(source));
+                byte[] payloadBytes = rulesManager.getBytesFromPayloadObject(payload);
+                requestBody = RequestBody.create(payloadBytes, mediaTypeFromTrigger(source));
             } else {
                 requestBody = RequestBody.create("", MEDIA_TYPE_BINARY);
             }
