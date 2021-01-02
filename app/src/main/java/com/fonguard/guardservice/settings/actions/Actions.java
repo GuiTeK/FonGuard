@@ -30,4 +30,7 @@ public class Actions {
 
     @SerializedName("phone_mms")
     public List<PhoneMmsAction> PhoneMms;
+
+    @SerializedName("phone_sms")
+    public List<PhoneSmsAction> PhoneSms;
 }

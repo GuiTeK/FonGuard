@@ -25,6 +25,7 @@ import com.fonguard.guardservice.settings.actions.Actions;
 import com.fonguard.guardservice.settings.actions.AwsS3Action;
 import com.fonguard.guardservice.settings.actions.HttpAction;
 import com.fonguard.guardservice.settings.actions.PhoneMmsAction;
+import com.fonguard.guardservice.settings.actions.PhoneSmsAction;
 import com.fonguard.guardservice.settings.rules.Rule;
 import com.fonguard.guardservice.settings.triggers.MotionTrigger;
 import com.fonguard.guardservice.settings.triggers.Triggers;
@@ -73,6 +74,7 @@ public final class Preferences {
         mSettings.Actions.Http = new ArrayList<>();
         mSettings.Actions.AwsS3 = new ArrayList<>();
         mSettings.Actions.PhoneMms = new ArrayList<>();
+        mSettings.Actions.PhoneSms = new ArrayList<>();
         mSettings.Rules = new ArrayList<>();
     }
 
@@ -119,6 +121,10 @@ public final class Preferences {
 
     public List<PhoneMmsAction> getPhoneMmsActions() {
         return mSettings.Actions.PhoneMms;
+    }
+
+    public List<PhoneSmsAction> getPhoneSmsActions() {
+        return mSettings.Actions.PhoneSms;
     }
 
     public List<Rule> getRules() {

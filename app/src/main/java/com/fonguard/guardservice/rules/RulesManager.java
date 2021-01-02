@@ -27,6 +27,7 @@ import com.fonguard.guardservice.actions.AwsS3Action;
 import com.fonguard.guardservice.actions.HttpAction;
 import com.fonguard.guardservice.actions.IAction;
 import com.fonguard.guardservice.actions.PhoneMmsAction;
+import com.fonguard.guardservice.actions.PhoneSmsAction;
 import com.fonguard.guardservice.settings.rules.Rule;
 import com.fonguard.guardservice.triggers.Trigger;
 
@@ -134,6 +135,9 @@ public class RulesManager {
                 case PHONE_MMS:
                     action = createPhoneMmsAction(ruleActionId);
                     break;
+                case PHONE_SMS:
+                    action = createPhoneSmsAction(ruleActionId);
+                    break;
                 default:
                     Log.w(LOG_TAG, "Unsupported action type " + ruleActionType +
                             ", skipping rule");
@@ -195,6 +199,19 @@ public class RulesManager {
         for (com.fonguard.guardservice.settings.actions.PhoneMmsAction action : actions) {
             if (action.Id.equals(id)) {
                 return new PhoneMmsAction(action);
+            }
+        }
+
+        return null;
+    }
+
+    private PhoneSmsAction createPhoneSmsAction(String id) {
+        List<com.fonguard.guardservice.settings.actions.PhoneSmsAction> actions =
+                mPreferences.getPhoneSmsActions();
+
+        for (com.fonguard.guardservice.settings.actions.PhoneSmsAction action : actions) {
+            if (action.Id.equals(id)) {
+                return new PhoneSmsAction(action);
             }
         }
 

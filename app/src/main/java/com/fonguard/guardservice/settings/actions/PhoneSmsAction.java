@@ -15,11 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.fonguard.guardservice.actions;
+package com.fonguard.guardservice.settings.actions;
 
-public enum Action {
-    HTTP,
-    AWS_S3,
-    PHONE_MMS,
-    PHONE_SMS
+import com.google.gson.annotations.SerializedName;
+
+public class PhoneSmsAction {
+    @SerializedName("id")
+    public String Id;
+
+    @SerializedName("recipient_phone_number")
+    public String RecipientPhoneNumber;
 }

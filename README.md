@@ -19,7 +19,25 @@ as described in the **rules** ([see below](#rules)).
 The following actions are currently available:
 * HTTP request
 * AWS S3 upload
+* Phone SMS
 * Phone MMS
+
+
+:warning: It is very important to understand that different actions have **different network
+requirements**. Depending on the network requirements and the network(s) available, an action might
+fail or succeed.
+
+| Action     | Mobile Network | Mobile Data | Wi-Fi |
+|------------|----------------|-------------|-------|
+| **HTTP**   |                | Yes         | Yes   |
+| **AWS S3** |                | Yes         | Yes   |
+| **MMS**    |                | Required    |       |
+| **SMS**    | Required       |             |       |
+
+For example:
+* Sending an MMS requires Mobile Data to be enabled and available, and **Wi-Fi Internet is useless
+for MMS**
+* Sending an HTTP request can work with **either** Mobile Data or Wi-Fi Internet alone
 
 ## Rules
 Rules are simply the **link** between a **trigger** (e.g. motion) and an **action** (e.g. upload the
@@ -88,6 +106,12 @@ copy/paste it and modify the values to suit your needs. **Make sure to remove al
                 "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
                 "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
             }
+        ],
+        "phone_sms": [
+            {
+                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
+                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
+            }
         ]
     },
     "rules": [
@@ -116,7 +140,7 @@ still in development.
 * Actions
     - [x] HTTP (GET, POST)
     - [x] AWS S3
-    - [ ] SMS
+    - [x] SMS
     - [x] MMS
     - [ ] Phone call
 * Rules
