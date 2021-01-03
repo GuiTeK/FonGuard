@@ -19,21 +19,10 @@ package com.fonguard.guardservice.settings.actions;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+public class PhoneCallAction {
+    @SerializedName("id")
+    public String Id;
 
-public class Actions {
-    @SerializedName("http")
-    public List<HttpAction> Http;
-
-    @SerializedName("aws_s3")
-    public List<AwsS3Action> AwsS3;
-
-    @SerializedName("phone_mms")
-    public List<PhoneMmsAction> PhoneMms;
-
-    @SerializedName("phone_sms")
-    public List<PhoneSmsAction> PhoneSms;
-
-    @SerializedName("phone_call")
-    public List<PhoneCallAction> PhoneCall;
+    @SerializedName("recipient_phone_number")
+    public String RecipientPhoneNumber;
 }

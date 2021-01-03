@@ -17,27 +17,34 @@ Once FonGuard has detected something, it will perform the **action(s)** associat
 as described in the **rules** ([see below](#rules)).
 
 The following actions are currently available:
+* SMS
+* MMS
+* Phone call
 * HTTP request
 * AWS S3 upload
-* Phone SMS
-* Phone MMS
-
 
 :warning: It is very important to understand that different actions have **different network
 requirements**. Depending on the network requirements and the network(s) available, an action might
 fail or succeed.
 
-| Action     | Mobile Network | Mobile Data | Wi-Fi |
-|------------|----------------|-------------|-------|
-| **HTTP**   |                | Yes         | Yes   |
-| **AWS S3** |                | Yes         | Yes   |
-| **MMS**    |                | Required    |       |
-| **SMS**    | Required       |             |       |
+| Action            | Mobile Network | Mobile Data | Wi-Fi      |
+|-------------------|----------------|-------------|------------|
+| **SMS**           | Required       |             |            |
+| **MMS**           |                | Required    |            |
+| **Phone call**    | Required       |             |            |
+| **HTTP**          |                | Sufficient  | Sufficient |
+| **AWS S3**        |                | Sufficient  | Sufficient |
 
 For example:
-* Sending an MMS requires Mobile Data to be enabled and available, and **Wi-Fi Internet is useless
-for MMS**
+* Sending an MMS requires Mobile Data to be enabled and available, while sending an SMS only
+requires Mobile Network and will work even if you have no Mobile Data (left)
 * Sending an HTTP request can work with **either** Mobile Data or Wi-Fi Internet alone
+
+For this reason, it is recommended to **have multiple actions configured**. For example:
+* MMS: will send a notification with attachment
+* SMS: will send a notification (without attachment) in case you have no Mobile Data left
+* AWS S3: will upload the attachment in case there is no Mobile Data left for the MMS but you still
+have Internet access (e.g. via Wi-Fi)
 
 ## Rules
 Rules are simply the **link** between a **trigger** (e.g. motion) and an **action** (e.g. upload the
@@ -78,6 +85,24 @@ copy/paste it and modify the values to suit your needs. **Make sure to remove al
         }
     },
     "actions": {
+        "phone_sms": [
+            {
+                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
+                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
+            }
+        ],
+        "phone_mms": [
+            {
+                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
+                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
+            }
+        ],
+        "phone_call": [
+            {
+                "id": "call-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
+                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
+            }
+        ],
         "http": [
             {
                 "id": "http-action-1", // Unique string ID of the action used for logging and referencing the action in the rules section.
@@ -99,18 +124,6 @@ copy/paste it and modify the values to suit your needs. **Make sure to remove al
                 "aws_secret_access_key": "...", // AWS secret access key associated with the access key ID above.
                 "bucket_name": "fonguard", // Name of the bucket in which to upload the attachment (e.g. picture for motion trigger).
                 "key_prefix": "img" // Prefix to use for naming the files in the bucket. The full filepath will be {PREFIX}{DATETIME} where {DATETIME} is yyyy-MM-dd'T'HH:mm:ss.SSSZ.
-            }
-        ],
-        "phone_mms": [
-            {
-                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
-                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
-            }
-        ],
-        "phone_sms": [
-            {
-                "id": "send-to-iphone", // Unique string ID of the action used for logging and referencing the action in the rules section.
-                "recipient_phone_number": "+33712345678" // Phone number of the recipient (both international and local phone number formats work).
             }
         ]
     },
@@ -138,11 +151,11 @@ still in development.
     - [ ] Accelerometer (vibration detection)
     - [ ] Heartbeat (device/app death detection)
 * Actions
-    - [x] HTTP (GET, POST)
-    - [x] AWS S3
     - [x] SMS
     - [x] MMS
-    - [ ] Phone call
+    - [x] Phone call
+    - [x] HTTP (GET, POST)
+    - [x] AWS S3
 * Rules
     - [x] Retry mechanism
     - [x] Cooldown mechanism

@@ -27,6 +27,10 @@
     <!-- Required for MmsManager/ConnectivityManager.requestNetwork -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
+    <!-- Required for com.fonguard.guardservice.actions.PhoneCallAction -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
 
     <!-- android:usesCleartextTraffic="true" because some carriers have HTTP (non-TLS) APNs -->
     <application

@@ -19,10 +19,13 @@ package com.fonguard;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
@@ -39,10 +42,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.provider.Settings;
 import android.view.Menu;
 
 public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_APP_NEEDED_DANGEROUS_PERMISSIONS = 1;
+    public static final int REQUEST_CODE_APP_MANAGE_OVERLAY_PERMISSION = 4;
     public static final int REQUEST_CODE_SETTINGS_IMPORT_FILE_DIALOG = 2;
     public static final int REQUEST_CODE_SETTINGS_EXPORT_FILE_DIALOG = 3;
 
@@ -60,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String[] APP_NEEDED_DANGEROUS_PERMISSIONS = new String[] {
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.SEND_SMS
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.CALL_PHONE
     };
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -126,10 +132,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_CODE_APP_MANAGE_OVERLAY_PERMISSION:
+                if (!Settings.canDrawOverlays(this)) {
+                    showAppNeededDangerousPermissionsDeniedDialog();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     private void requestAppNeededDangerousPermissions() {
         ActivityCompat.requestPermissions(this, APP_NEEDED_DANGEROUS_PERMISSIONS,
                 REQUEST_CODE_APP_NEEDED_DANGEROUS_PERMISSIONS);
+
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, REQUEST_CODE_APP_MANAGE_OVERLAY_PERMISSION);
+        }
     }
 
     private void showAppNeededDangerousPermissionsDeniedDialog() {

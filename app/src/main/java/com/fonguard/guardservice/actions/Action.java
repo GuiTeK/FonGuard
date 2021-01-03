@@ -21,5 +21,6 @@ public enum Action {
     HTTP,
     AWS_S3,
     PHONE_MMS,
-    PHONE_SMS
+    PHONE_SMS,
+    PHONE_CALL
 }
